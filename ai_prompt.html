@@ -6,7 +6,7 @@
 <meta name="description" content="AI Prompt 智能寶庫 — 收藏最實用的 AI 提示詞，一鍵複製直接用！">
 <title>🚀 AI Prompt 智能寶庫</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Kaisei+Decol:wght@700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Kaisei+Decol:wght=700&family=Noto+Sans+TC:wght=400;500;700;900&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
@@ -37,7 +37,7 @@ body { font-family:var(--font-body); background:var(--bg); color:var(--ink); min
 .blob:nth-child(5){width:250px;height:250px;background:var(--c2);top:45%;left:45%;animation-delay:-6s}
 @keyframes blobDrift{0%{transform:translate(0,0) scale(1)}100%{transform:translate(40px,30px) scale(1.15)}}
 
-/* 工具按鈕（深色模式、我的最愛） */
+/* 工具按鈕 */
 .top-controls { position: absolute; top: 20px; right: 20px; display: flex; gap: 10px; z-index: 10; }
 .ctrl-btn { width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--border); background: var(--surface); color: var(--ink); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); box-shadow: var(--shadow-sm); font-size: 1.2rem; }
 .ctrl-btn:hover { transform: translateY(-2px); border-color: var(--c4); box-shadow: var(--shadow); }
@@ -138,7 +138,6 @@ body { font-family:var(--font-body); background:var(--bg); color:var(--ink); min
   <div class="blob"></div><div class="blob"></div>
 </div>
 
-<!-- 控制列 -->
 <div class="top-controls">
   <button class="ctrl-btn" id="themeBtn" title="切換深淺模式">🌓</button>
 </div>
@@ -148,7 +147,8 @@ body { font-family:var(--font-body); background:var(--bg); color:var(--ink); min
   <h1>🚀 <span class="word-ai">AI</span> Prompt<br><span class="word-lib">智能寶庫</span></h1>
   <p class="hero-sub">收藏最實用的 AI 提示詞，一鍵複製，直接貼給 ChatGPT / Claude 用！</p>
   <div class="hero-actions">
-    <a class="btn-sheet" href="https://docs.google.com/spreadsheets/d/12-8zBeRwO6FEKdlYyuXVmmNW1XMFACHMWdNvr_QKL2c/edit?usp=sharing" target="_blank" rel="noopener">📊 開啟原始 Google Sheet</a>
+    <!-- 改為動態 JavaScript 生成 CSV 下載，不依賴任何實體 data.csv 檔案 -->
+    <button class="btn-sheet" id="dynamicCsvBtn">📊 下載提示詞 CSV 資料表</button>
   </div>
   <div class="stats-bar" id="statsBar" style="display:none">
     <div class="stat"><div class="stat-num" id="statTotal">—</div><div class="stat-lbl">個 Prompt</div></div>
@@ -175,7 +175,7 @@ body { font-family:var(--font-body); background:var(--bg); color:var(--ink); min
 <main class="main" id="mainArea">
   <div class="status-area" id="statusArea">
     <div class="spinner"></div>
-    <div class="status-text">正在讀取 Google Sheet…</div>
+    <div class="status-text">正在載入系統中…</div>
     <div class="status-sub">請稍候 🔄</div>
   </div>
 </main>
@@ -196,16 +196,52 @@ body { font-family:var(--font-body); background:var(--bg); color:var(--ink); min
 </div>
 
 <footer class="site-footer">
-  <p>資料來源：<a href="https://docs.google.com/spreadsheets/d/12-8zBeRwO6FEKdlYyuXVmmNW1XMFACHMWdNvr_QKL2c/edit?usp=sharing" target="_blank">Google Sheet</a> ・ 使用 AI 協助製作</p>
+  <p>資料來源：內置高效能數據庫 ・ 使用 AI 協助製作</p>
 </footer>
 
 <script>
-/* ── CONFIG ── */
-const SHEET_ID = '12-8zBeRwO6FEKdlYyuXVmmNW1XMFACHMWdNvr_QKL2c';
-const GID      = '1480282197';
-const CSV_URLS = [
-  `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID}`,
-  `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${GID}`,
+/* ── 📝 內置提示詞數據庫 (您隨時可以直接在這裡修改或增加提示詞) ── */
+const EMBEDDED_PROMPTS = [
+  {
+    "分類": "內容創作",
+    "標題": "小紅書爆款文案生成器",
+    "內容": "你是一個專業的小紅書爆款文案寫手。請幫我為產品寫一篇極具吸引力的推廣文案。文案需要符合以下特點：\n1. 標題要足夠吸引人、有爆發力，使用驚嘆號與表情符號。\n2. 內文多用口語化的語氣（例如：親們、真的絕了、姐妹們衝啊）。\n3. 適當加入標籤（Hashtags）。"
+  },
+  {
+    "分類": "內容創作",
+    "標題": "世紀大師級社群媒體行銷文案",
+    "內容": "請扮演一位獲獎無數的社群媒體行銷文案大師。我希望推廣一個產品/服務。請為我撰寫一份兼具故事性與轉換率的行銷文案。\n撰寫原則：\n- 痛點引入（Hook）：開篇前 3 秒必須抓住目標受眾眼球，點出核心痛點。\n- 情感共鳴（Story）：訴說一個能解決該痛點的短暫情境或客戶真實改變案例。\n- 行動呼籲（CTA）：文末提供清晰、不容錯過的購買、訂閱或互動誘因。"
+  },
+  {
+    "分類": "程式應用",
+    "標題": "資深代碼審查專家 (Code Review)",
+    "內容": "請扮演一位極具經驗的資深全端工程師。我將為您提供一段程式碼，請幫我審查並給出優化建議。請從以下維度進行分析：\n1. 程式碼可讀性與維護性。\n2. 執行效能與可能潛在的記憶體洩漏。\n3. 安全性漏洞檢測。\n4. 具體的重構建議（並附上修改後的範例）。"
+  },
+  {
+    "分類": "程式應用",
+    "標題": "Tailwind CSS 佈局與排版大師",
+    "內容": "你是一位頂尖的資深前端 UI/UX 開發工程師。請協助我將設計想法轉化為高品質、乾淨、響應式的 Tailwind CSS 程式碼。\n- 優先使用現代極簡美學設計語彙。\n- 請完全使用純 HTML 與 Tailwind CSS 類別標記，不額外撰寫自訂 CSS。\n- 必須考慮 Dark Mode（深色模式）的相容配比與漸層陰影效果。"
+  },
+  {
+    "分類": "筆記精煉",
+    "標題": "黃金三點式精簡總結法",
+    "內容": "請閱讀我提供的以下文章或段落，並將其濃縮為三個最核心的重點：\n- 重點需字字珠璣，並用條列式呈現。\n- 在最後用一句話提煉出整篇文章最關鍵的行動啟示（Takeaway）。"
+  },
+  {
+    "分類": "筆記精煉",
+    "標題": "費曼學習法觀念解釋器",
+    "內容": "請幫我理解這個知識點/觀念。請使用「費曼學習法」來對我進行解說：\n1. 請用一個十歲小孩也能聽懂的簡單生活化比喻來描述它。\n2. 避免使用任何深奧的專有名詞，如果非得使用，請務必先解構它。\n3. 指出在這個觀念中，一般初學者最容易陷入的理解誤區有哪些。"
+  },
+  {
+    "分類": "專案企劃",
+    "標題": "商業模式畫布 (BMC) 思考教練",
+    "內容": "請扮演一位專業的敏捷創業顧問與商業畫布導師。我目前有一個創業構想。請帶領我一步一步完成「商業模式畫布 (Business Model Canvas)」的九大模組評估。\n對答方式：請一次只問我一個模組的問題，並等我回答後再給予優化回饋並引導至下一個模組。首個模組請從『價值主張』開始。"
+  },
+  {
+    "分類": "圖片生成",
+    "標題": "Midjourney 極致細節咒語轉換器",
+    "內容": "你是一個極具藝術美感的 AI 繪圖咒語專家。我會給你一個簡單的畫面描述，請幫我擴寫並轉譯成 Midjourney 英文提示詞。咒語格式需包含：\n- 主體細節描述\n- 藝術風格（如：Cyberpunk, Editorial Fashion, Cinematic Light）\n- 渲染細節、相機鏡頭參數（如：8k, Unreal Engine 5, 85mm lens, f/1.8）"
+  }
 ];
 
 const CAT_EMOJI = {'內容創作':'✍️','筆記精煉':'📝','程式應用':'💻','簡報表達':'📊','程式生成':'🤖','文本優化':'✨','生文校正':'📋','專案企劃':'📌','圖片生成':'🎨','筆記整理':'🗂️','資訊整理':'📁','心智圖法':'🧠','AI 協思':'🧠','其他':'💡'};
@@ -229,8 +265,9 @@ const TAG_COLORS = [
   {bg:'rgba(255,217,61,0.15)',color:'#ca8a04'},{bg:'rgba(199,125,255,0.15)',color:'#a855f7'},
 ];
 
-let allData=[], activeFilter='全部', searchQuery='', copyCount=0;
-let _catKey, _titleKey, _bodyKey;
+let allData = EMBEDDED_PROMPTS;
+let activeFilter='全部', searchQuery='', copyCount=0;
+let _catKey = '分類', _titleKey = '標題', _bodyKey = '內容';
 const catColorMap = {};
 let bookmarks = JSON.parse(localStorage.getItem('ai_prompt_bookmarks') || '[]');
 
@@ -245,96 +282,36 @@ document.getElementById('themeBtn').addEventListener('click', () => {
   localStorage.setItem('ai_prompt_theme', newTheme);
 });
 
-/* ── CSV FETCH ── */
-async function fetchCSV() {
-  let lastErr;
-  for (const url of CSV_URLS) {
-    try {
-      const res = await fetch(url, { cache: 'no-cache' });
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      const text = await res.text();
-      if (text.trim().startsWith('<!')) throw new Error('取得錯誤的網頁內容（非CSV）');
-      return text;
-    } catch(e) { lastErr = e; }
-  }
-  throw lastErr;
-}
+/* ── INIT STANDALONE ── */
+function init() {
+  // 為每筆資料增加唯一 ID
+  allData.forEach((p, idx) => {
+    p._id = 'p_' + btoa(encodeURIComponent(p[_titleKey] || idx)).substring(0, 16);
+  });
 
-/* ── PARSE CSV ── */
-function parseCSV(text) {
-  const rows = []; let cur='', inQ=false, cells=[];
-  for (let i=0;i<text.length;i++) {
-    const ch=text[i], nx=text[i+1];
-    if (ch==='"'&&inQ&&nx==='"'){cur+='"';i++;}
-    else if(ch==='"'){inQ=!inQ;}
-    else if(ch===','&&!inQ){cells.push(cur);cur='';}
-    else if((ch==='\n'||(ch==='\r'&&nx==='\n'))&&!inQ){
-      if(ch==='\r')i++;
-      cells.push(cur);cur='';rows.push(cells);cells=[];
-    } else {cur+=ch;}
-  }
-  if(cur||cells.length){cells.push(cur);rows.push(cells);}
-  if(rows.length<2) return [];
-  const headers = rows[0].map(h=>h.trim());
-  return rows.slice(1).map(r=>{
-    const obj={};
-    headers.forEach((h,i)=>{obj[h]=(r[i]||'').trim();});
-    return obj;
-  }).filter(r=>Object.values(r).some(v=>v));
-}
+  const cats = [...new Set(allData.map(p=>p[_catKey]).filter(Boolean))];
+  cats.forEach((c,i)=>{ catColorMap[c]=i%STRIPES.length; });
 
-function findKey(obj,keys){return keys.find(k=>k in obj&&obj[k])||null;}
-
-/* ── INIT ── */
-async function init() {
-  try {
-    const csv = await fetchCSV();
-    allData = parseCSV(csv);
-    if (!allData.length) throw new Error('試算表沒有資料，請確認工作表有內容');
-
-    const s = allData[0];
-    _catKey   = findKey(s,['分類','類別','category','Category','tag','Tag','標籤','場景','主題']);
-    _titleKey = findKey(s,['標題','名稱','title','Title','name','Name','prompt_name','提示詞名稱','功能名稱','功能']);
-    _bodyKey  = findKey(s,['內容','prompt','Prompt','content','Content','提示詞','提示詞內容','body','指令','說明']);
-    const keys=Object.keys(s);
-    if(!_catKey)  _catKey  =keys[0];
-    if(!_titleKey)_titleKey=keys[1];
-    if(!_bodyKey) _bodyKey =keys[2];
-
-    // 為每筆資料增加唯一 ID（以標題與內容作 hash 作為簡化 ID）
-    allData.forEach((p, idx) => {
-      p._id = 'p_' + btoa(encodeURIComponent(p[_titleKey] || idx)).substring(0, 16);
-    });
-
-    const cats = _catKey ? [...new Set(allData.map(p=>p[_catKey]).filter(Boolean))] : [];
-    cats.forEach((c,i)=>{ catColorMap[c]=i%STRIPES.length; });
-
-    buildFilters(cats);
-    updateStats(cats.length);
-    render();
-  } catch(e) {
-    document.getElementById('statusArea').innerHTML=`
-      <div style="font-size:3rem;margin-bottom:16px">😵</div>
-      <div class="status-text">無法讀取資料</div>
-      <div class="status-sub" style="color:#ef4444;margin-top:8px">${esc(e.message)}</div>
-      <div class="status-sub" style="margin-top:16px;line-height:1.8">
-        請在 Google Sheet 點右上角「共用」<br>
-        → 一般存取 → 改成「<strong> know 連結的任何人</strong>」→「<strong>檢視者</strong>」<br>
-        然後重新整理頁面
-      </div>
-      <button onclick="location.reload()" style="margin-top:20px;padding:10px 24px;background:#4d96ff;color:#fff;border:none;border-radius:50px;font-size:.9rem;font-weight:700;cursor:pointer;">🔄 重新整理</button>`;
-  }
+  buildFilters(cats);
+  updateStats(cats.length);
+  render();
 }
 
 /* ── FILTERS ── */
 function buildFilters(cats) {
   const wrap = document.getElementById('filterInner');
+  wrap.innerHTML = `
+    <button class="chip active" data-cat="全部">全部</button>
+    <button class="chip" data-cat="★ 收藏">★ 我的收藏</button>
+  `;
+  
   cats.forEach((cat,i) => {
     const btn=document.createElement('button');
     btn.className='chip'; btn.dataset.cat=cat;
     btn.textContent=(CAT_EMOJI[cat]||'')+(CAT_EMOJI[cat]?' ':'')+cat;
     wrap.appendChild(btn);
   });
+  
   wrap.addEventListener('click',e=>{
     const chip=e.target.closest('.chip'); if(!chip)return;
     activeFilter=chip.dataset.cat;
@@ -379,7 +356,7 @@ function render() {
 
   const groups={};
   list.forEach(p=>{
-    const cat=(_catKey&&p[_catKey])||'其他';
+    const cat=p[_catKey]||'其他';
     (groups[cat]=groups[cat]||[]).push(p);
   });
 
@@ -394,9 +371,9 @@ function render() {
     const grid=document.createElement('div');
     grid.className='cards-grid';
     items.forEach((p,idx)=>{
-      const title=(_titleKey&&p[_titleKey])||'（無標題）';
-      const body =(_bodyKey &&p[_bodyKey]) ||'';
-      const tag  =(_catKey  &&p[_catKey])  ||cat;
+      const title=p[_titleKey]||'（無標題）';
+      const body =p[_bodyKey] ||'';
+      const tag  =p[_catKey]  ||cat;
       const isBookmarked = bookmarks.includes(p._id);
       
       const card=document.createElement('div');
@@ -449,14 +426,12 @@ function toggleBookmark(id, btn) {
   }
 }
 
-/* ── COPY WITH FALLBACK (確保高度相容 iframe) ── */
+/* ── COPY WITH FALLBACK ── */
 function copyText(text,btn){
   const executeCopy = () => {
-    // 優先使用新式 Clipboard API
     if (navigator.clipboard && window.isSecureContext) {
       return navigator.clipboard.writeText(text);
     } else {
-      // 降級使用舊式 execCommand 方案
       const textArea = document.createElement("textarea");
       textArea.value = text;
       textArea.style.position = "fixed";
@@ -526,10 +501,39 @@ const si=document.getElementById('searchInput'), sc=document.getElementById('sea
 si.addEventListener('input',e=>{searchQuery=e.target.value.toLowerCase();sc.classList.toggle('visible',!!searchQuery);render();});
 sc.addEventListener('click',()=>{si.value='';searchQuery='';sc.classList.remove('visible');si.focus();render();});
 
+/* ── DYNAMIC CSV EXPORT GENERATOR (動態生成 CSV 下載) ── */
+document.getElementById('dynamicCsvBtn').addEventListener('click', () => {
+  const headers = ['分類', '標題', '內容'];
+  const csvRows = [headers.join(',')];
+  
+  allData.forEach(row => {
+    const values = [
+      `"${(row.分類 || '').replace(/"/g, '""')}"`,
+      `"${(row.標題 || '').replace(/"/g, '""')}"`,
+      `"${(row.內容 || '').replace(/"/g, '""')}"`
+    ];
+    csvRows.push(values.join(','));
+  });
+  
+  // 使用 UTF-8 BOM 碼，確保 Excel 開啟時中文不會亂碼
+  const csvContent = "\uFEFF" + csvRows.join("\n");
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  
+  const link = document.createElement("a");
+  link.setAttribute("href", url);
+  link.setAttribute("download", "prompt_data.csv");
+  link.style.visibility = 'hidden';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+});
+
 /* ── UTILS ── */
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function escA(s){return String(s).replace(/"/g,'&quot;').replace(/\n/g,'&#10;');}
 
+// 直接初始化
 init();
 </script>
 </body>
