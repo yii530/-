@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="AI Prompt 智能寶庫 — 收藏最實用的 AI 提示詞，一鍵複製直接用！">
+<title>🚀 AI Prompt 智能寶庫</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kaisei+Decol:wght@700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --c1:#ff6b6b; --c2:#ffd93d; --c3:#6bcb77; --c4:#4d96ff; --c5:#c77dff; --c6:#ff9a3c;
+  --bg:#fafafa; --surface:#ffffff; --ink:#1a1a2e; --muted:#6b7280; --border:#e5e7eb;
+  --radius-sm:10px; --radius:18px; --radius-lg:28px;
+  --shadow-sm:0 2px 8px rgba(0,0,0,0.06); --shadow:0 6px 24px rgba(0,0,0,0.09); --shadow-lg:0 16px 48px rgba(0,0,0,0.13);
+  --font-head:'Kaisei Decol','Noto Sans TC',serif; --font-body:'Noto Sans TC',sans-serif;
+}
+html { scroll-behavior:smooth; }
+body { font-family:var(--font-body); background:var(--bg); color:var(--ink); min-height:100vh; overflow-x:hidden; }
+
+.bg-blobs { position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+.blob { position:absolute; border-radius:50%; opacity:0.12; filter:blur(60px); animation:blobDrift 18s ease-in-out infinite alternate; }
+.blob:nth-child(1){width:500px;height:500px;background:var(--c1);top:-100px;left:-80px;animation-delay:0s}
+.blob:nth-child(2){width:400px;height:400px;background:var(--c4);top:20%;right:-60px;animation-delay:-4s}
+.blob:nth-child(3){width:350px;height:350px;background:var(--c3);bottom:10%;left:20%;animation-delay:-8s}
+.blob:nth-child(4){width:300px;height:300px;background:var(--c5);bottom:-60px;right:15%;animation-delay:-12s}
+.blob:nth-child(5){width:250px;height:250px;background:var(--c2);top:45%;left:45%;animation-delay:-6s}
+@keyframes blobDrift{0%{transform:translate(0,0) scale(1)}100%{transform:translate(40px,30px) scale(1.15)}}
+
+.hero{position:relative;z-index:1;text-align:center;padding:64px 20px 36px}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#fff5f5,#fff0fb);border:1.5px solid #ffd6d6;color:var(--c1);font-size:0.78rem;font-weight:700;padding:5px 14px;border-radius:50px;margin-bottom:18px;animation:popIn .5s cubic-bezier(.34,1.56,.64,1) both}
+.hero h1{font-family:var(--font-head);font-size:clamp(2rem,6vw,3.6rem);font-weight:700;line-height:1.15;margin-bottom:14px;animation:slideUp .6s cubic-bezier(.34,1.56,.64,1) .1s both}
+.hero h1 .word-ai{color:var(--c4)}
+.hero h1 .word-lib{background:linear-gradient(135deg,var(--c5),var(--c4));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:1rem;color:var(--muted);margin-bottom:24px;animation:slideUp .6s cubic-bezier(.34,1.56,.64,1) .2s both}
+.hero-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;animation:slideUp .6s cubic-bezier(.34,1.56,.64,1) .3s both}
+.btn-sheet{display:inline-flex;align-items:center;gap:7px;padding:10px 22px;border-radius:50px;font-family:inherit;font-size:.88rem;font-weight:700;text-decoration:none;border:2px solid var(--border);background:white;color:var(--muted);transition:all .2s;cursor:pointer}
+.btn-sheet:hover{border-color:var(--c4);color:var(--c4);transform:translateY(-2px);box-shadow:var(--shadow-sm)}
+.stats-bar{display:flex;justify-content:center;gap:32px;margin-top:28px;animation:slideUp .6s cubic-bezier(.34,1.56,.64,1) .35s both}
+.stat{text-align:center}
+.stat-num{font-family:var(--font-head);font-size:1.6rem;font-weight:700;color:var(--ink)}
+.stat-lbl{font-size:.75rem;color:var(--muted);margin-top:2px}
+
+.search-section{position:relative;z-index:1;display:flex;justify-content:center;padding:0 20px;margin-bottom:24px}
+.search-wrap{position:relative;width:100%;max-width:600px}
+.search-wrap svg.ico{position:absolute;left:20px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;z-index:2}
+.search-input{width:100%;padding:16px 48px 16px 52px;font-family:inherit;font-size:1rem;border:2px solid var(--border);border-radius:var(--radius-lg);background:var(--surface);color:var(--ink);outline:none;box-shadow:var(--shadow);transition:border-color .2s,box-shadow .2s}
+.search-input:focus{border-color:var(--c4);box-shadow:0 0 0 4px rgba(77,150,255,.12),var(--shadow)}
+.search-input::placeholder{color:#adb5bd}
+.search-clear{position:absolute;right:16px;top:50%;transform:translateY(-50%);background:var(--border);border:none;border-radius:50%;width:26px;height:26px;display:none;align-items:center;justify-content:center;cursor:pointer;font-size:.8rem;color:var(--muted);transition:background .15s}
+.search-clear:hover{background:#d1d5db}
+.search-clear.visible{display:flex}
+
+.filter-section{position:relative;z-index:1;padding:0 20px 28px}
+.filter-inner{max-width:960px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+.chip{padding:8px 20px;border-radius:50px;border:2px solid var(--border);background:var(--surface);font-family:inherit;font-size:.85rem;font-weight:600;color:var(--muted);cursor:pointer;transition:all .18s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;box-shadow:var(--shadow-sm)}
+.chip:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.chip.active{color:#fff;border-color:transparent;box-shadow:var(--shadow);transform:translateY(-2px);background:linear-gradient(135deg,var(--c4),var(--c5))}
+
+.main{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 20px 80px}
+.section-head{display:flex;align-items:center;gap:10px;margin-bottom:20px;padding-bottom:12px;border-bottom:2px dashed var(--border)}
+.section-emoji{font-size:1.5rem}
+.section-name{font-family:var(--font-head);font-size:1.25rem;font-weight:700}
+.section-count{margin-left:auto;font-size:.78rem;font-weight:700;background:var(--border);color:var(--muted);padding:3px 10px;border-radius:50px}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px;margin-bottom:48px}
+
+.card{background:var(--surface);border-radius:var(--radius);border:2px solid var(--border);display:flex;flex-direction:column;overflow:hidden;box-shadow:var(--shadow-sm);transition:transform .25s cubic-bezier(.34,1.56,.64,1),box-shadow .25s,border-color .25s;animation:cardIn .5s cubic-bezier(.34,1.56,.64,1) both}
+.card:hover{transform:translateY(-6px) rotate(-.5deg);box-shadow:var(--shadow-lg)}
+.card-stripe{height:5px;flex-shrink:0;background:linear-gradient(90deg,var(--c4),var(--c5))}
+.card-body-wrap{padding:18px 20px 12px;flex:1;display:flex;flex-direction:column;gap:8px}
+.card-tag{display:inline-block;font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:50px;background:#edf4ff;color:var(--c4)}
+.card-title{font-family:var(--font-head);font-size:1.08rem;font-weight:700;line-height:1.4;color:var(--ink)}
+.card-preview{font-size:.82rem;color:var(--muted);line-height:1.75;overflow:hidden;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical}
+.card-footer{padding:0 20px 18px;display:flex;gap:8px}
+.copy-btn{flex:1;padding:10px;border:none;border-radius:var(--radius-sm);font-family:inherit;font-size:.85rem;font-weight:700;cursor:pointer;transition:all .18s;background:var(--ink);color:#fff}
+.copy-btn:hover{opacity:.85;transform:scale(.98)}
+.copy-btn.copied{background:linear-gradient(135deg,#10b981,#059669)}
+.expand-btn{width:40px;background:var(--border);border:none;border-radius:var(--radius-sm);cursor:pointer;font-size:1rem;transition:background .15s;color:var(--muted)}
+.expand-btn:hover{background:#d1d5db}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(26,26,46,.5);backdrop-filter:blur(6px);z-index:100;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:var(--surface);border-radius:var(--radius-lg);max-width:640px;width:100%;max-height:80vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:var(--shadow-lg);animation:popIn .3s cubic-bezier(.34,1.56,.64,1)}
+.modal-stripe{height:6px;flex-shrink:0;background:linear-gradient(90deg,var(--c4),var(--c5))}
+.modal-head{padding:22px 24px 14px;border-bottom:1px solid var(--border)}
+.modal-tag{display:inline-block;font-size:.75rem;font-weight:700;padding:3px 11px;border-radius:50px;margin-bottom:10px;background:#edf4ff;color:var(--c4)}
+.modal-title{font-family:var(--font-head);font-size:1.3rem;font-weight:700}
+.modal-body{padding:20px 24px;overflow-y:auto;font-size:.9rem;line-height:1.9;color:var(--ink);white-space:pre-wrap;flex:1}
+.modal-foot{padding:14px 24px;border-top:1px solid var(--border);display:flex;gap:10px}
+.modal-copy{flex:1;padding:12px;border:none;border-radius:var(--radius-sm);font-family:inherit;font-size:.9rem;font-weight:700;background:var(--ink);color:#fff;cursor:pointer;transition:all .18s}
+.modal-copy:hover{opacity:.85}
+.modal-copy.copied{background:linear-gradient(135deg,#10b981,#059669)}
+.modal-close{padding:12px 18px;border:2px solid var(--border);border-radius:var(--radius-sm);background:transparent;font-family:inherit;font-size:.88rem;font-weight:600;color:var(--muted);cursor:pointer;transition:all .18s}
+.modal-close:hover{border-color:var(--c1);color:var(--c1)}
+
+.status-area{text-align:center;padding:80px 20px;color:var(--muted)}
+.spinner{width:44px;height:44px;border:4px solid var(--border);border-top-color:var(--c4);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 20px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.status-text{font-size:1rem;font-weight:500}
+.status-sub{font-size:.82rem;margin-top:8px;opacity:.7}
+.empty-state{text-align:center;padding:60px 20px;color:var(--muted);grid-column:1/-1}
+.empty-emoji{font-size:3rem;margin-bottom:12px}
+
+.site-footer{position:relative;z-index:1;text-align:center;padding:24px 20px 40px;font-size:.8rem;color:#b0b8c4}
+.site-footer a{color:var(--c4);text-decoration:none}
+
+@keyframes slideUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}
+@keyframes cardIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:640px){.cards-grid{grid-template-columns:1fr}.stats-bar{gap:20px}.stat-num{font-size:1.3rem}}
+</style>
+</head>
+<body>
+
+<div class="bg-blobs" aria-hidden="true">
+  <div class="blob"></div><div class="blob"></div><div class="blob"></div>
+  <div class="blob"></div><div class="blob"></div>
+</div>
+
+<header class="hero">
+  <div class="hero-badge">✨ 每日更新 · 即複即用</div>
+  <h1>🚀 <span class="word-ai">AI</span> Prompt<br><span class="word-lib">智能寶庫</span></h1>
+  <p class="hero-sub">收藏最實用的 AI 提示詞，一鍵複製，直接貼給 ChatGPT / Claude 用！</p>
+  <div class="hero-actions">
+    <a class="btn-sheet" href="https://docs.google.com/spreadsheets/d/12-8zBeRwO6FEKdlYyuXVmmNW1XMFACHMWdNvr_QKL2c/edit?usp=sharing" target="_blank" rel="noopener">📊 開啟原始 Google Sheet</a>
+  </div>
+  <div class="stats-bar" id="statsBar" style="display:none">
+    <div class="stat"><div class="stat-num" id="statTotal">—</div><div class="stat-lbl">個 Prompt</div></div>
+    <div class="stat"><div class="stat-num" id="statCats">—</div><div class="stat-lbl">個分類</div></div>
+    <div class="stat"><div class="stat-num" id="statCopied">0</div><div class="stat-lbl">次複製</div></div>
+  </div>
+</header>
+
+<div class="search-section">
+  <div class="search-wrap">
+    <svg class="ico" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+    <input class="search-input" id="searchInput" type="search" placeholder="搜尋提示詞名稱或內容…" autocomplete="off">
+    <button class="search-clear" id="searchClear" title="清除">✕</button>
+  </div>
+</div>
+
+<div class="filter-section">
+  <div class="filter-inner" id="filterInner">
+    <button class="chip active" data-cat="全部">全部</button>
+  </div>
+</div>
+
+<main class="main" id="mainArea">
+  <div class="status-area" id="statusArea">
+    <div class="spinner"></div>
+    <div class="status-text">正在讀取 Google Sheet…</div>
+    <div class="status-sub">請稍候 🔄</div>
+  </div>
+</main>
+
+<div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="modal-stripe"></div>
+    <div class="modal-head">
+      <span class="modal-tag" id="modalTag"></span>
+      <div class="modal-title" id="modalTitle"></div>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-foot">
+      <button class="modal-copy" id="modalCopy">📋 複製 Prompt</button>
+      <button class="modal-close" id="modalClose">關閉</button>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <p>資料來源：<a href="https://docs.google.com/spreadsheets/d/12-8zBeRwO6FEKdlYyuXVmmNW1XMFACHMWdNvr_QKL2c/edit?usp=sharing" target="_blank">Google Sheet</a> ・ 使用 AI 協助製作</p>
+</footer>
+
+<script>
+/* ── CONFIG ── */
+const SHEET_ID = '12-8zBeRwO6FEKdlYyuXVmmNW1XMFACHMWdNvr_QKL2c';
+const GID      = '1480282197';
+// 多個 CSV URL 輪流嘗試，提高成功率
+const CSV_URLS = [
+  `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID}`,
+  `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${GID}`,
+];
+
+const CAT_EMOJI = {'內容創作':'✍️','筆記精煉':'📝','程式應用':'💻','簡報表達':'📊','程式生成':'🤖','文本優化':'✨','生文校正':'📋','專案企劃':'📌','圖片生成':'🎨','筆記整理':'🗂️','資訊整理':'📁','心智圖法':'🧠','AI 協思':'🧠','其他':'💡'};
+// 彩色條紋色票（依序循環）
+const STRIPES = [
+  'linear-gradient(90deg,#ff6b6b,#ff9a3c)',
+  'linear-gradient(90deg,#4d96ff,#c77dff)',
+  'linear-gradient(90deg,#6bcb77,#4d96ff)',
+  'linear-gradient(90deg,#ffd93d,#ff9a3c)',
+  'linear-gradient(90deg,#c77dff,#4d96ff)',
+  'linear-gradient(90deg,#6bcb77,#ffd93d)',
+  'linear-gradient(90deg,#ff9a3c,#ff6b6b)',
+  'linear-gradient(90deg,#4d96ff,#6bcb77)',
+  'linear-gradient(90deg,#ffd93d,#c77dff)',
+  'linear-gradient(90deg,#c77dff,#ff6b6b)',
+];
+const TAG_COLORS = [
+  {bg:'#fff0ed',color:'#ff6b6b'},{bg:'#edf4ff',color:'#4d96ff'},
+  {bg:'#edfff0',color:'#3aab4e'},{bg:'#fffaed',color:'#d4870a'},
+  {bg:'#f8edff',color:'#a855f7'},{bg:'#f0fff4',color:'#3aab4e'},
+  {bg:'#fff5ed',color:'#ff7a1a'},{bg:'#edf6ff',color:'#2563eb'},
+  {bg:'#fffbeb',color:'#ca8a04'},{bg:'#fdf0ff',color:'#a855f7'},
+];
+
+let allData=[], activeFilter='全部', searchQuery='', copyCount=0;
+let _catKey, _titleKey, _bodyKey;
+const catColorMap = {};
+
+/* ── CSV FETCH (works on https://) ── */
+async function fetchCSV() {
+  let lastErr;
+  for (const url of CSV_URLS) {
+    try {
+      const res = await fetch(url, { cache: 'no-cache' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const text = await res.text();
+      if (text.trim().startsWith('<!')) throw new Error('Got HTML instead of CSV');
+      return text;
+    } catch(e) { lastErr = e; }
+  }
+  throw lastErr;
+}
+
+/* ── PARSE CSV ── */
+function parseCSV(text) {
+  const rows = []; let cur='', inQ=false, cells=[];
+  for (let i=0;i<text.length;i++) {
+    const ch=text[i], nx=text[i+1];
+    if (ch==='"'&&inQ&&nx==='"'){cur+='"';i++;}
+    else if(ch==='"'){inQ=!inQ;}
+    else if(ch===','&&!inQ){cells.push(cur);cur='';}
+    else if((ch==='\n'||(ch==='\r'&&nx==='\n'))&&!inQ){
+      if(ch==='\r')i++;
+      cells.push(cur);cur='';rows.push(cells);cells=[];
+    } else {cur+=ch;}
+  }
+  if(cur||cells.length){cells.push(cur);rows.push(cells);}
+  if(rows.length<2) return [];
+  const headers = rows[0].map(h=>h.trim());
+  return rows.slice(1).map(r=>{
+    const obj={};
+    headers.forEach((h,i)=>{obj[h]=(r[i]||'').trim();});
+    return obj;
+  }).filter(r=>Object.values(r).some(v=>v));
+}
+
+function findKey(obj,keys){return keys.find(k=>k in obj&&obj[k])||null;}
+
+/* ── INIT ── */
+async function init() {
+  try {
+    const csv = await fetchCSV();
+    allData = parseCSV(csv);
+    if (!allData.length) throw new Error('試算表沒有資料，請確認工作表有內容');
+
+    const s = allData[0];
+    _catKey   = findKey(s,['分類','類別','category','Category','tag','Tag','標籤','場景','主題']);
+    _titleKey = findKey(s,['標題','名稱','title','Title','name','Name','prompt_name','提示詞名稱','功能名稱','功能']);
+    _bodyKey  = findKey(s,['內容','prompt','Prompt','content','Content','提示詞','提示詞內容','body','指令','說明']);
+    const keys=Object.keys(s);
+    if(!_catKey)  _catKey  =keys[0];
+    if(!_titleKey)_titleKey=keys[1];
+    if(!_bodyKey) _bodyKey =keys[2];
+
+    // assign colors to categories
+    const cats = _catKey ? [...new Set(allData.map(p=>p[_catKey]).filter(Boolean))] : [];
+    cats.forEach((c,i)=>{ catColorMap[c]=i%STRIPES.length; });
+
+    buildFilters(cats);
+    updateStats(cats.length);
+    render();
+  } catch(e) {
+    document.getElementById('statusArea').innerHTML=`
+      <div style="font-size:3rem;margin-bottom:16px">😵</div>
+      <div class="status-text">無法讀取資料</div>
+      <div class="status-sub" style="color:#ef4444;margin-top:8px">${esc(e.message)}</div>
+      <div class="status-sub" style="margin-top:16px;line-height:1.8">
+        請在 Google Sheet 點右上角「共用」<br>
+        → 一般存取 → 改成「<strong>知道連結的任何人</strong>」→「<strong>檢視者</strong>」<br>
+        然後重新整理頁面
+      </div>
+      <button onclick="location.reload()" style="margin-top:20px;padding:10px 24px;background:#4d96ff;color:#fff;border:none;border-radius:50px;font-size:.9rem;font-weight:700;cursor:pointer;">🔄 重新整理</button>`;
+  }
+}
+
+/* ── FILTERS ── */
+function buildFilters(cats) {
+  const wrap = document.getElementById('filterInner');
+  cats.forEach((cat,i) => {
+    const btn=document.createElement('button');
+    btn.className='chip'; btn.dataset.cat=cat;
+    btn.textContent=(CAT_EMOJI[cat]||'')+(CAT_EMOJI[cat]?' ':'')+cat;
+    wrap.appendChild(btn);
+  });
+  wrap.addEventListener('click',e=>{
+    const chip=e.target.closest('.chip'); if(!chip)return;
+    activeFilter=chip.dataset.cat;
+    wrap.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    // dynamic gradient for active chip
+    const ci = catColorMap[activeFilter]??0;
+    chip.style.background = activeFilter==='全部' ? '' : STRIPES[ci];
+    render();
+  });
+}
+
+/* ── STATS ── */
+function updateStats(cats) {
+  document.getElementById('statTotal').textContent=allData.length;
+  document.getElementById('statCats').textContent=cats;
+  document.getElementById('statCopied').textContent=copyCount;
+  document.getElementById('statsBar').style.display='flex';
+}
+
+/* ── RENDER ── */
+function render() {
+  const area=document.getElementById('mainArea');
+  area.innerHTML='';
+  let list=allData;
+  if(searchQuery) list=list.filter(p=>Object.values(p).some(v=>v.toLowerCase().includes(searchQuery)));
+  if(activeFilter!=='全部'&&_catKey) list=list.filter(p=>p[_catKey]===activeFilter);
+
+  if(!list.length){
+    area.innerHTML=`<div class="empty-state"><div class="empty-emoji">🔍</div><p>找不到「${esc(searchQuery||activeFilter)}」的相關提示詞</p><p style="margin-top:8px;font-size:.85rem">換個關鍵字試試？</p></div>`;
+    return;
+  }
+
+  const groups={};
+  list.forEach(p=>{
+    const cat=(_catKey&&p[_catKey])||'其他';
+    (groups[cat]=groups[cat]||[]).push(p);
+  });
+
+  Object.entries(groups).forEach(([cat,items],gi)=>{
+    const ci = catColorMap[cat]??gi%STRIPES.length;
+    const tc = TAG_COLORS[ci%TAG_COLORS.length];
+    const sec=document.createElement('section');
+    const head=document.createElement('div');
+    head.className='section-head';
+    head.innerHTML=`<span class="section-emoji">${CAT_EMOJI[cat]||'📌'}</span><span class="section-name">${esc(cat)}</span><span class="section-count">${items.length} 個</span>`;
+    sec.appendChild(head);
+    const grid=document.createElement('div');
+    grid.className='cards-grid';
+    items.forEach((p,idx)=>{
+      const title=(_titleKey&&p[_titleKey])||'（無標題）';
+      const body =(_bodyKey &&p[_bodyKey]) ||'';
+      const tag  =(_catKey  &&p[_catKey])  ||cat;
+      const card=document.createElement('div');
+      card.className='card';
+      card.style.animationDelay=`${(gi*.05+idx*.04).toFixed(2)}s`;
+      card.innerHTML=`
+        <div class="card-stripe" style="background:${STRIPES[ci]}"></div>
+        <div class="card-body-wrap">
+          <span class="card-tag" style="background:${tc.bg};color:${tc.color}">${esc(tag)}</span>
+          <div class="card-title">${esc(title)}</div>
+          <div class="card-preview">${esc(body)}</div>
+        </div>
+        <div class="card-footer">
+          <button class="copy-btn" data-body="${escA(body)}">📋 複製 Prompt</button>
+          <button class="expand-btn" data-title="${escA(title)}" data-body="${escA(body)}" data-tag="${escA(tag)}" data-ci="${ci}" title="展開全文">⤢</button>
+        </div>`;
+      grid.appendChild(card);
+    });
+    sec.appendChild(grid);
+    area.appendChild(sec);
+  });
+
+  area.querySelectorAll('.copy-btn').forEach(btn=>btn.addEventListener('click',()=>copyText(btn.dataset.body,btn)));
+  area.querySelectorAll('.expand-btn').forEach(btn=>btn.addEventListener('click',()=>openModal(btn.dataset.title,btn.dataset.body,btn.dataset.tag,+btn.dataset.ci)));
+}
+
+/* ── COPY ── */
+function copyText(text,btn){
+  navigator.clipboard.writeText(text).then(()=>{
+    if(btn){const o=btn.innerHTML;btn.innerHTML='✅ 已複製！';btn.classList.add('copied');setTimeout(()=>{btn.innerHTML=o;btn.classList.remove('copied');},2000);}
+    copyCount++;
+    document.getElementById('statCopied').textContent=copyCount;
+  });
+}
+
+/* ── MODAL ── */
+function openModal(title,body,tag,ci){
+  const tc=TAG_COLORS[(ci||0)%TAG_COLORS.length];
+  document.querySelector('.modal-stripe').style.background=STRIPES[(ci||0)%STRIPES.length];
+  const mt=document.getElementById('modalTag');
+  mt.textContent=tag; mt.style.background=tc.bg; mt.style.color=tc.color;
+  document.getElementById('modalTitle').textContent=title;
+  document.getElementById('modalBody').textContent=body;
+  document.getElementById('modalCopy').dataset.body=body;
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){document.getElementById('modalOverlay').classList.remove('open');document.body.style.overflow='';}
+document.getElementById('modalClose').addEventListener('click',closeModal);
+document.getElementById('modalOverlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+document.getElementById('modalCopy').addEventListener('click',function(){copyText(this.dataset.body,this);});
+
+/* ── SEARCH ── */
+const si=document.getElementById('searchInput'), sc=document.getElementById('searchClear');
+si.addEventListener('input',e=>{searchQuery=e.target.value.toLowerCase();sc.classList.toggle('visible',!!searchQuery);render();});
+sc.addEventListener('click',()=>{si.value='';searchQuery='';sc.classList.remove('visible');si.focus();render();});
+
+/* ── UTILS ── */
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function escA(s){return String(s).replace(/"/g,'&quot;').replace(/\n/g,'&#10;');}
+
+init();
+</script>
+</body>
+</html>
