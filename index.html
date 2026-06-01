@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Prompt 智能寶庫</title>
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
+        body { font-family: 'Noto Sans TC', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen">
+
+    <div class="max-w-6xl mx-auto px-4 py-8">
+        <!-- 頁首 -->
+        <header class="text-center mb-8">
+            <h1 class="text-3xl font-bold flex items-center justify-center gap-2 mb-4">
+                🚀 AI Prompt 智能寶庫
+            </h1>
+            <a href="https://docs.google.com/spreadsheets/d/12-8zBeRwO6FEKdlYyuXVmmNW1XMFACHMWdNvr_QKL2c/edit" 
+               target="_blank" rel="noopener noreferrer"
+               class="text-sm text-gray-500 hover:text-blue-600 underline">
+                📂 開啟原始資料 Google Sheet
+            </a>
+        </header>
+
+        <!-- 搜尋列 -->
+        <div class="max-w-xl mx-auto mb-10">
+            <input type="text" placeholder="🔍 搜尋提示詞..." 
+                   class="w-full p-4 rounded-full border border-gray-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+        </div>
+
+        <!-- 分類標籤 -->
+        <div class="flex flex-wrap justify-center gap-2 mb-12">
+            <button class="px-5 py-2 bg-blue-600 text-white rounded-full text-sm">全部</button>
+            <button class="px-5 py-2 bg-white border border-gray-200 rounded-full text-sm hover:bg-gray-100">內容創作</button>
+            <button class="px-5 py-2 bg-white border border-gray-200 rounded-full text-sm hover:bg-gray-100">筆記精煉</button>
+            <button class="px-5 py-2 bg-white border border-gray-200 rounded-full text-sm hover:bg-gray-100">程式應用</button>
+            <button class="px-5 py-2 bg-white border border-gray-200 rounded-full text-sm hover:bg-gray-100">心智圖法</button>
+        </div>
+
+        <!-- 主標題 -->
+        <h2 class="text-2xl font-semibold mb-6 flex items-center gap-2">
+            🧠 AI 協思
+        </h2>
+
+        <!-- 卡片網格 -->
+        <div id="prompt-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- 示範卡片 -->
+            <div class="bg-white rounded-2xl p-6 border-t-4 border-purple-600 shadow-md">
+                <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">內容創作</span>
+                <h3 class="text-lg font-bold mt-3 mb-4">意義單詞</h3>
+                <p class="text-gray-600 text-sm mb-6 h-32 overflow-hidden">將文章的重點部分，尋找一個代表性英文字母...</p>
+                <button class="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">複製 Prompt</button>
+            </div>
+            
+            <div class="bg-white rounded-2xl p-6 border-t-4 border-purple-600 shadow-md">
+                <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">內容創作</span>
+                <h3 class="text-lg font-bold mt-3 mb-4">品牌名稱</h3>
+                <p class="text-gray-600 text-sm mb-6 h-32 overflow-hidden">完成 ChatGPT 角色定義後，依據「品牌定義」與「產品介紹」...</p>
+                <button class="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">複製 Prompt</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 您可以在此處加入 JavaScript 來處理搜尋或從 API 載入資料
+        console.log("網站已就緒，準備開始運作。");
+    </script>
+</body>
+</html>
