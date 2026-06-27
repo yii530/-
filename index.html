@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧸 AI Prompt 智能寶庫 🧸</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            /* 🍦 專屬可愛馬卡龍撞色核心色調 */
+            --bg-gradient: linear-gradient(135deg, #fff5f5 0%, #f0f7ff 50%, #fffdf0 100%);
+            --card-bg: #ffffff;
+            --text-main: #4a4e69; /* 溫柔的深梅子灰，比純黑更柔和 */
+            --text-muted: #9a9eab;
+            
+            /* 撞色三主色 */
+            --pastel-pink: #ffb7b2;  /* 蜜桃淺粉 */
+            --pastel-blue: #a8dadc;  /* 蘇打淺藍 */
+            --pastel-yellow: #ffe599;/* 奶油淺黃 */
+            --pastel-purple: #e8dbfc;/* 薰衣草粉紫 */
+        }
+
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: "Comic Sans MS", "Chalkboard SE", "Microsoft JhengHei", system-ui, sans-serif; 
+        }
+        
+        body { 
+            background: var(--bg-gradient); 
+            color: var(--text-main); 
+            padding: 40px 20px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            min-height: 100vh; 
+        }
+        
+        header { text-align: center; margin-bottom: 35px; width: 100%; max-width: 800px; }
+        
+        /* ✨ 每日更新漂浮泡泡 */
+        .badge { 
+            background: #ffe5ec; 
+            color: #ff4d6d; 
+            padding: 6px 16px; 
+            border-radius: 50px; 
+            font-size: 13px; 
+            font-weight: bold; 
+            display: inline-block; 
+            margin-bottom: 18px;
+            box-shadow: 0 4px 10px rgba(255, 77, 109, 0.15);
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+
+        .logo-title { 
+            font-size: 44px; 
+            font-weight: 900; 
+            margin-bottom: 15px; 
+            background: linear-gradient(to right, #ff9aa2, #b5ead7, #ffdac1); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(2px 2px 0px rgba(0,0,0,0.05));
+        }
+        
+        .sub-title { font-size: 15px; color: #72778a; margin-bottom: 25px; font-weight: bold; }
+        
+        /* 後台按鈕改為小雲朵風格 */
+        .sheet-link { 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 8px; 
+            background: white; 
+            padding: 10px 22px; 
+            border-radius: 50px; 
+            text-decoration: none; 
+            color: #6c5ce7; 
+            font-size: 14px; 
+            font-weight: bold; 
+            border: 2px dashed #e8dbfc; 
+            box-shadow: 0 6px 12px rgba(108, 92, 231, 0.05); 
+            transition: all 0.2s ease-in-out; 
+            margin-bottom: 20px; 
+        }
+        .sheet-link:hover { background: #faf8ff; transform: scale(1.03); border-color: #6c5ce7; }
+        
+        /* 胖嘟嘟圓角搜尋框 */
+        .search-container { position: relative; width: 100%; max-width: 600px; margin: 10px auto 30px auto; }
+        .search-container input { 
+            width: 100%; 
+            padding: 18px 20px 18px 55px; 
+            border: 3px solid #ffebed; 
+            border-radius: 50px; 
+            font-size: 16px; 
+            outline: none; 
+            background-color: white;
+            box-shadow: 0 8px 24px rgba(255, 183, 178, 0.15); 
+            transition: all 0.3s;
+        }
+        .search-container input:focus {
+            border-color: var(--pastel-pink);
+            box-shadow: 0 8px 24px rgba(255, 183, 178, 0.3); 
+        }
+        .search-container i { position: absolute; left: 22px; top: 50%; transform: translateY(-50%); color: var(--pastel-pink); font-size: 20px; }
+        
+        /* 分類標籤改為軟綿綿果凍按鈕 */
+        .filter-tags { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-bottom: 45px; }
+        .tag-btn { 
+            background-color: white; 
+            border: 2px solid #f0f0f0; 
+            padding: 10px 24px; 
+            border-radius: 50px; 
+            font-size: 14px; 
+            font-weight: bold;
+            cursor: pointer; 
+            color: #72778a; 
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+        }
+        .tag-btn:hover {
+            transform: scale(1.05);
+            background-color: #f7faff;
+            border-color: var(--pastel-blue);
+        }
+        .tag-btn.active { 
+            background: var(--pastel-pink); 
+            color: white; 
+            border-color: transparent; 
+            box-shadow: 0 6px 15px rgba(255, 183, 178, 0.5); 
+            transform: scale(1.05);
+        }
+        
+        /* 卡片網格與軟糖卡片外觀 */
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 35px; width: 100%; max-width: 1200px; }
+        
+        .card { 
+            background: var(--card-bg); 
+            border-radius: 32px; /* 超圓潤角 */
+            box-shadow: 0 12px 35px rgba(154, 158, 171, 0.1); 
+            display: flex; 
+            flex-direction: column; 
+            height: 480px; 
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            overflow: hidden; 
+            border: 3px solid transparent; /* 預留給動態上色 */
+            position: relative;
+        }
+        
+        /* 滑鼠移入卡片會像果凍一樣軟Q浮起，並帶有專屬彩色柔和陰影 */
+        .card:hover { 
+            transform: translateY(-8px) scale(1.02); 
+            box-shadow: 0 20px 40px rgba(174, 214, 241, 0.3);
+        }
+        
+        .card-body { padding: 30px; flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
+        
+        /* 可愛雙膠囊標籤 */
+        .tag-wrapper { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
+        .badge-cat1 { font-size: 12px; font-weight: bold; padding: 5px 14px; border-radius: 50px; background: #e3fafc; color: #15aabf; }
+        .badge-cat2 { font-size: 12px; font-weight: bold; padding: 5px 14px; border-radius: 50px; background: #fff0f6; color: #e64980; }
+        
+        .card-title { font-size: 24px; font-weight: 900; margin-bottom: 16px; color: #2b2d42; text-align: left; }
+        
+        /* 內文背景改為淡淡的奶油黃底色，更像記事本 */
+        .card-prompt-box { 
+            font-size: 15px; 
+            color: #4a4e69; 
+            line-height: 1.7; 
+            flex-grow: 1; 
+            overflow-y: auto; 
+            white-space: pre-wrap; 
+            word-break: break-all; 
+            padding: 15px; 
+            background: #fffdf4; /* 淡淡溫暖黃 */
+            border-radius: 20px;
+            border: 1px dashed #ffeaa7;
+            text-align: left; 
+        }
+        .card-prompt-box::-webkit-scrollbar { width: 6px; }
+        .card-prompt-box::-webkit-scrollbar-thumb { background: #ffe3e3; border-radius: 10px; }
+        
+        /* 鮮明奶油黃撞色按鈕 */
+        .copy-btn { 
+            background: var(--pastel-yellow); 
+            color: #7a5f00; /* 深茶色字體更復古可愛 */
+            border: none; 
+            padding: 16px; 
+            width: calc(100% - 60px); 
+            margin: 0 30px 30px 30px; 
+            border-radius: 20px; 
+            font-size: 16px; 
+            font-weight: 900; 
+            cursor: pointer; 
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            text-align: center; 
+            box-shadow: 0 6px 0px #edd182; /* 做出立體布丁鈕的感覺 */
+            position: relative;
+            top: 0;
+        }
+        .copy-btn:hover { 
+            background: #ffd97d; 
+            transform: translateY(2px);
+            box-shadow: 0 4px 0px #edd182;
+        }
+        .copy-btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 0px 0px transparent;
+        }
+        
+        footer { margin-top: 60px; margin-bottom: 30px; text-align: center; width: 100%; }
+        .footer-link { 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 8px; 
+            background: #b5ead7; 
+            color: #2c5e4b; 
+            padding: 14px 28px; 
+            border-radius: 50px; 
+            text-decoration: none; 
+            font-weight: bold; 
+            box-shadow: 0 6px 15px rgba(181, 234, 215, 0.3); 
+            transition: all 0.2s; 
+        }
+        .footer-link:hover { background: var(--pastel-blue); color: #1d4e50; transform: scale(1.05); }
+        
+        .status-msg { text-align: center; font-size: 18px; color: var(--text-muted); grid-column: 1 / -1; padding: 60px 20px; font-weight: bold; }
+        
+        /* 除錯隱藏樣式 */
+        .debug-panel { margin-top: 20px; padding: 15px; background: #fff3cd; border: 1px solid #ffeeba; border-radius: 20px; text-align: left; max-width: 600px; width: 100%; font-size: 13px; color: #856404; display: none; }
+        .debug-panel code { display: block; background: #ffffff; padding: 8px; border-radius: 6px; margin-top: 5px; overflow-x: auto; color: #c7254e; font-family: monospace; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="badge">🌸 每日更新 ・ 點點即複製 🌸</div>
+        <div class="logo-title">🧸 AI Prompt 智能寶庫</div>
+        <div class="sub-title">收藏最實用的 AI 提示詞，一鍵複製，直接貼給 ChatGPT / Claude 用！🍬</div>
+        
+        <a href="https://docs.google.com/spreadsheets/d/12-8zBeRwO6FEKdlYyuXVmmNW1XMFACHMWdNvr_QKL2c/edit?gid=1480282197" target="_blank" class="sheet-link">
+            <i class="fa-regular fa-file-excel"></i> 開啟原始 Google Sheet
+        </a>
+        
+        <div class="search-container">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <input type="text" id="searchInput" placeholder="搜尋想要的提示詞名稱或內容...">
+        </div>
+
+        <div class="filter-tags" id="filterTags">
+            <button class="tag-btn active" onclick="filterCategory('全部')">全部</button>
+        </div>
+    </header>
+
+    <main class="card-grid" id="cardGrid">
+        <div class="status-msg" id="loadingStatus">🍭 雲端資料同步中，很快就出來卡片囉...</div>
+    </main>
+
+    <div id="debugPanel" class="debug-panel">
+        ⚠️ <strong>除錯提示面板：</strong>
+        <span id="debugMessage">正在分析連線狀態...</span>
+        <code id="debugUrl">正在取得讀取網址...</code>
+    </div>
+
+    <footer>
+        <a href="https://docs.google.com/spreadsheets/d/12-8zBeRwO6FEKdlYyuXVmmNW1XMFACHMWdNvr_QKL2c/edit?gid=1480282197" target="_blank" class="footer-link">
+            <i class="fa-regular fa-file-excel"></i> 前往後台檢視資料庫 🥞
+        </a>
+    </footer>
+
+    <script>
+        const SPREADSHEET_ID = '12-8zBeRwO6FEKdlYyuXVmmNW1XMFACHMWdNvr_QKL2c';
+        const SHEET_GID = '1480282197';
+
+        const targetUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/export?format=csv&gid=${SHEET_GID}`;
+        
+        let allData = [];
+        let currentCategory = '全部';
+
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                if (allData.length === 0) {
+                    showDebug("連線逾時，請檢查 Google 雲端權限是否依然是「檢視權限開啟」狀態！");
+                }
+            }, 6000);
+
+            fetchData();
+            document.getElementById('searchInput').addEventListener('input', renderCards);
+        });
+
+        function showDebug(msg) {
+            document.getElementById('loadingStatus').innerHTML = `😵 哎呀！同步卡住了，請看下方黃色面板。`;
+            const panel = document.getElementById('debugPanel');
+            panel.style.display = 'block';
+            document.getElementById('debugMessage').innerText = msg;
+            document.getElementById('debugUrl').innerText = "請求路徑: " + targetUrl;
+        }
+
+        function fetchData() {
+            fetch(targetUrl)
+                .then(res => {
+                    if(!res.ok) throw new Error('伺服器回應狀態異常: ' + res.status);
+                    return res.text();
+                })
+                .then(csvText => {
+                    if (!csvText || csvText.trim().length === 0) throw new Error('取得空白資料');
+                    parseCSV(csvText);
+                })
+                .catch(err => {
+                    showDebug(err.message + "。請確認試算表的共用是否依然維持開啟。");
+                });
+        }
+
+        function parseCSV(text) {
+            let lines = [];
+            let row = [""];
+            let inQuotes = false;
+
+            for (let i = 0; i < text.length; i++) {
+                let c = text[i];
+                let next = text[i+1];
+
+                if (c === '"') {
+                    if (inQuotes && next === '"') { 
+                        row[row.length - 1] += '"'; 
+                        i++; 
+                    } else { 
+                        inQuotes = !inQuotes; 
+                    }
+                } else if (c === ',' && !inQuotes) {
+                    row.push('');
+                } else if ((c === '\r' || c === '\n') && !inQuotes) {
+                    if (c === '\r' && next === '\n') { i++; }
+                    lines.push(row);
+                    row = [''];
+                } else {
+                    row[row.length - 1] += c;
+                }
+            }
+            if (row.length > 1 || row[0] !== '') lines.push(row);
+
+            allData = [];
+            for(let i = 1; i < lines.length; i++) {
+                let r = lines[i];
+                if (r && r.length >= 2 && r[0] && r[0].trim() !== "" && r[0].trim() !== "名稱") {
+                    allData.push({
+                        title: r[0].trim(),
+                        cat1: r[1] ? r[1].trim() : 'AI 協思',
+                        cat2: r[2] ? r[2].trim() : '其他',
+                        prompt: r[4] ? r[4] : (r[3] ? r[3] : '')
+                    });
+                }
+            }
+
+            if(allData.length === 0) {
+                showDebug("有成功連線，但解析出來是空的，請確認 A 欄有填名稱。");
+            } else {
+                document.getElementById('debugPanel').style.display = 'none';
+                generateCategoryButtons();
+                renderCards();
+            }
+        }
+
+        function generateCategoryButtons() {
+            const categories = ['全部', ...new Set(allData.map(item => item.cat2))];
+            const tagsContainer = document.getElementById('filterTags');
+            tagsContainer.innerHTML = ''; 
+
+            categories.forEach(cat => {
+                if(!cat || cat === 'null' || cat === 'Content' || cat === '分類') return;
+                const btn = document.createElement('button');
+                btn.className = `tag-btn ${cat === currentCategory ? 'active' : ''}`;
+                btn.innerText = cat;
+                btn.onclick = () => filterCategory(cat, btn);
+                tagsContainer.appendChild(btn);
+            });
+        }
+
+        function filterCategory(cat, element) {
+            currentCategory = cat;
+            document.querySelectorAll('.tag-btn').forEach(btn => btn.classList.remove('active'));
+            if(element) element.classList.add('active');
+            renderCards();
+        }
+
+        function getCurrentFilteredData() {
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+            return allData.filter(item => {
+                const matchesCategory = (currentCategory === '全部' || item.cat2 === currentCategory);
+                const matchesSearch = (item.title.toLowerCase().includes(searchQuery) || item.prompt.toLowerCase().includes(searchQuery));
+                return matchesCategory && matchesSearch;
+            });
+        }
+
+        function renderCards() {
+            const grid = document.getElementById('cardGrid');
+            grid.innerHTML = '';
+            const filteredData = getCurrentFilteredData();
+
+            if (filteredData.length === 0) {
+                grid.innerHTML = '<div class="status-msg">🔍 找不到相符的可愛提示詞。</div>';
+                return;
+            }
+
+            // 🧁 馬卡龍撞色輪播配色組
+            const borderColors = ['#ffb7b2', '#b5ead7', '#ffdac1', '#e2c2ff', '#aeecf1'];
+
+            filteredData.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                
+                // 動態為每張卡片上精緻的馬卡龍色邊框
+                card.style.borderColor = borderColors[index % borderColors.length];
+
+                card.innerHTML = `
+                    <div class="card-body">
+                        <div class="tag-wrapper">
+                            <span class="badge-cat1">🧸 ${escapeHtml(item.cat1)}</span>
+                            <span class="badge-cat2">🍬 ${escapeHtml(item.cat2)}</span>
+                        </div>
+                        <div class="card-title">${escapeHtml(item.title)}</div>
+                        <div class="card-prompt-box">${escapeHtml(item.prompt)}</div>
+                    </div>
+                    <button class="copy-btn" onclick="copyPromptText(this, ${index})">複製 Prompt 📋</button>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function copyPromptText(button, index) {
+            const filteredData = getCurrentFilteredData();
+            const text = filteredData[index].prompt;
+            navigator.clipboard.writeText(text).then(() => {
+                const prevText = button.innerText;
+                button.innerHTML = '✓ 已複製成功囉！🌸';
+                button.style.background = '#b5ead7';
+                button.style.color = '#2c5e4b';
+                button.style.boxShadow = '0 6px 0px #8bcbb3';
+                setTimeout(() => {
+                    button.innerText = prevText;
+                    button.style.background = 'var(--pastel-yellow)';
+                    button.style.color = '#7a5f00';
+                    button.style.boxShadow = '0 6px 0px #edd182';
+                }, 1500);
+            });
+        }
+
+        function escapeHtml(text) {
+            if(!text) return '';
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>
